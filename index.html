@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TAILOR — Persistent AI Memory. 100% Local. Open Source.</title>
+<meta name="description" content="TAILOR is an open-source, self-hosted AI memory framework. Give any AI assistant persistent, searchable memory that runs 100% on your hardware."/>
+<meta name="keywords" content="AI memory, MCP, self-hosted, ChromaDB, LLM, open source, personal AI, knowledge base"/>
+<meta name="author" content="TAILOR"/>
+<meta name="robots" content="index, follow"/>
+<!-- Open Graph -->
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="TAILOR — AI Assistants Forget. TAILOR Fixes That."/>
+<meta property="og:description" content="Open-source, self-hosted AI memory framework. 100% local. LLM-agnostic. MCP native."/>
+<meta property="og:url" content="https://tailormemory.ai"/>
+<meta property="og:site_name" content="TAILOR"/>
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="TAILOR — Persistent AI Memory"/>
+<meta name="twitter:description" content="Open-source AI memory that runs on your hardware."/>
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><text x='60' y='60' text-anchor='middle' dominant-baseline='central' font-family='Inter,sans-serif' font-size='48' font-weight='700'><tspan fill='%230d9488' font-weight='400' font-size='54'>[</tspan><tspan fill='%230d9488' font-weight='700' font-size='48'>A</tspan><tspan fill='%230d9488' font-weight='700' font-size='48' letter-spacing='-2'>I</tspan><tspan fill='%230d9488' font-weight='400' font-size='54'>]</tspan></text></svg>"/>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface": "#0a0a0a",
+        "surface-low": "#111111",
+        "surface-mid": "#181818",
+        "surface-high": "#222222",
+        "surface-highest": "#2a2a2a",
+        "teal": "#0d9488",
+        "teal-light": "#5eead4",
+        "teal-glow": "#0d948833",
+        "muted": "#9ca3af",
+        "muted-light": "#d1d5db",
+        "border-ghost": "#ffffff0d",
+        "border-teal": "#0d948840",
+        "logo-text": "#e5e5e5",
+      },
+      fontFamily: {
+        "display": ['"Space Grotesk"', 'sans-serif'],
+        "mono": ['"JetBrains Mono"', 'monospace'],
+      },
+    },
+  },
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #d1d5db; font-family: 'Space Grotesk', sans-serif; }
+  ::selection { background: #0d948855; }
+
+  /* Scroll animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Blueprint grid */
+  .blueprint-grid {
+    background-image: radial-gradient(#0d9488 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+    opacity: 0.04;
+  }
+
+  /* Glow effects */
+  .glow-teal { box-shadow: 0 0 60px #0d948820, 0 0 120px #0d948810; }
+  .glow-line { background: linear-gradient(90deg, #0d948800, #0d9488, #0d948800); }
+
+  /* Navbar scroll effect */
+  .nav-scrolled { background: #0a0a0aee; backdrop-filter: blur(20px); border-bottom: 1px solid #ffffff08; }
+
+  /* Material icons */
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+
+  /* T[AI]LOR brand brackets — replicate logo.svg dy="-3" offset */
+  .brand-bracket {
+    position: relative;
+    top: -0.05em;
+    font-size: 1.12em;
+    font-weight: 400;
+    color: #0d9488;
+  }
+  .brand-ai {
+    color: #0d9488;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .brand-text {
+    color: #e5e5e5;
+  }
+
+  /* Smooth image hover */
+  .img-zoom { transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+  .group:hover .img-zoom { transform: scale(1.08); }
+
+  /* Code block styling */
+  .code-block {
+    background: #0d0d0d;
+    border: 1px solid #ffffff0d;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Table row hover */
+  .table-row:hover { background: #0d948808; }
+
+  /* Pillar card gradient */
+  .pillar-gradient { background: linear-gradient(to top, #0a0a0a 0%, #0a0a0a88 40%, transparent 100%); }
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- ═══════════════════════════════════════ NAVBAR ═══════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+  <div class="flex justify-between items-center max-w-7xl mx-auto px-6 md:px-8 h-20">
+    <a href="#" class="flex items-center gap-2">
+      <svg width="160" viewBox="0 0 680 70" role="img" xmlns="http://www.w3.org/2000/svg">
+        <title>T[AI]LOR logo</title>
+        <text x="340" y="40" text-anchor="middle" dominant-baseline="central" font-family="'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="52" font-weight="700" letter-spacing="1">
+          <tspan fill="#e5e5e5">T</tspan><tspan fill="#0d9488" font-weight="400" font-size="58" dy="-3">[</tspan><tspan fill="#0d9488" font-weight="700" font-size="52" dy="3">A</tspan><tspan fill="#0d9488" font-weight="700" font-size="52" letter-spacing="-2">I</tspan><tspan fill="#0d9488" font-weight="400" font-size="58" dy="-3">]</tspan><tspan fill="#e5e5e5" font-size="52" dy="3">LOR</tspan>
+        </text>
+      </svg>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#features" class="text-muted hover:text-white transition-colors font-mono text-xs uppercase tracking-widest">Features</a>
+      <a href="#architecture" class="text-muted hover:text-white transition-colors font-mono text-xs uppercase tracking-widest">Architecture</a>
+      <a href="#comparison" class="text-muted hover:text-white transition-colors font-mono text-xs uppercase tracking-widest">Compare</a>
+    </div>
+    <a href="https://github.com/tailormemory/tailor" target="_blank" rel="noopener" class="bg-teal text-white px-6 py-2.5 font-display font-bold text-sm tracking-wide hover:brightness-110 transition-all rounded-sm">
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0 z-0">
+    <img src="images/hero.png" alt="" class="w-full h-full object-cover opacity-30 mix-blend-luminosity" loading="eager"/>
+    <div class="absolute inset-0 bg-gradient-to-b from-surface via-surface/60 to-surface"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-surface via-transparent to-surface/80"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-8 w-full">
+    <div class="max-w-3xl">
+      <span class="font-mono text-teal text-xs font-bold tracking-[0.25em] mb-8 block uppercase reveal">Open Source Memory Framework</span>
+      <h1 class="font-display font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[0.95] mb-8 reveal reveal-delay-1">
+        AI Assistants Forget.<br/>
+        <span class="brand-text">T</span><span class="brand-bracket">[</span><span class="brand-ai">AI</span><span class="brand-bracket">]</span><span class="brand-text">LOR</span> Fixes That.
+      </h1>
+      <p class="text-muted text-lg md:text-xl font-light mb-12 leading-relaxed max-w-xl reveal reveal-delay-2">
+        Persistent AI memory. 100% local.<br class="hidden md:block"/>
+        LLM-agnostic infrastructure for your local intelligence.
+      </p>
+      <div class="flex flex-wrap gap-4 reveal reveal-delay-3">
+        <a href="#quickstart" class="bg-teal text-white px-10 py-4 font-display font-bold text-sm tracking-wide hover:brightness-110 transition-all rounded-sm">
+          Get Started
+        </a>
+        <a href="https://github.com/tailormemory/tailor" target="_blank" rel="noopener" class="border border-white/10 hover:border-teal text-white px-10 py-4 font-display font-bold text-sm tracking-wide transition-all rounded-sm">
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-40 reveal reveal-delay-4">
+    <span class="font-mono text-[9px] tracking-[0.3em] uppercase text-muted">Scroll</span>
+    <div class="w-px h-12 bg-gradient-to-b from-teal to-transparent"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ PROBLEM / SOLUTION ═══════════════════════════════════════ -->
+<section class="py-16 md:py-20 border-t border-border-ghost">
+  <div class="max-w-7xl mx-auto px-6 md:px-8 grid md:grid-cols-2 gap-px">
+    <div class="pr-8 md:pr-16 py-12 reveal">
+      <span class="font-mono text-red-400/80 text-[10px] font-bold tracking-[0.2em] uppercase mb-4 block">The Problem</span>
+      <h2 class="font-display text-3xl md:text-4xl font-bold mb-6 tracking-tight text-white leading-tight">AI assistants lose context when tabs close.</h2>
+      <p class="text-muted leading-relaxed">Every new session is a blank slate. Your decisions, preferences, and history vanish — requiring constant re-explanation.</p>
+    </div>
+    <div class="pl-8 md:pl-16 py-12 md:border-l border-border-ghost reveal reveal-delay-1">
+      <span class="font-mono text-teal text-[10px] font-bold tracking-[0.2em] uppercase mb-4 block">The Solution</span>
+      <h2 class="font-display text-3xl md:text-4xl font-bold mb-6 tracking-tight text-white leading-tight"><span class="brand-text">T</span><span class="brand-bracket">[</span><span class="brand-ai">AI</span><span class="brand-bracket">]</span><span class="brand-text">LOR</span> adds a persistent memory layer to your hardware.</h2>
+      <p class="text-muted leading-relaxed">A dedicated local service that enables any LLM to recall years of conversations, preferences, and facts — instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ PILLARS ═══════════════════════════════════════ -->
+<section class="py-16 md:py-20 px-6 md:px-8">
+  <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
+    <!-- 100% Local -->
+    <div class="group relative aspect-[4/5] overflow-hidden rounded-sm bg-surface-low border border-border-ghost reveal">
+      <img src="images/pillar-local.png" alt="Server hardware close-up" class="absolute inset-0 w-full h-full object-cover opacity-15 img-zoom" loading="lazy"/>
+      <div class="absolute inset-0 p-8 md:p-10 flex flex-col justify-end pillar-gradient">
+        <span class="font-mono text-teal text-[10px] tracking-[0.2em] mb-3 block">01 — PRIVACY FIRST</span>
+        <h3 class="font-display text-2xl md:text-3xl font-bold mb-3 text-white">100% Local</h3>
+        <p class="text-muted text-sm leading-relaxed">Your memories never leave your machine. Zero cloud dependency, zero data leaks.</p>
+      </div>
+    </div>
+    <!-- LLM-Agnostic -->
+    <div class="group relative aspect-[4/5] overflow-hidden rounded-sm bg-surface-low border border-border-ghost reveal reveal-delay-1">
+      <img src="images/pillar-agnostic.png" alt="Network cables and ports" class="absolute inset-0 w-full h-full object-cover opacity-15 img-zoom" loading="lazy"/>
+      <div class="absolute inset-0 p-8 md:p-10 flex flex-col justify-end pillar-gradient">
+        <span class="font-mono text-teal text-[10px] tracking-[0.2em] mb-3 block">02 — COMPATIBILITY</span>
+        <h3 class="font-display text-2xl md:text-3xl font-bold mb-3 text-white">LLM-Agnostic</h3>
+        <p class="text-muted text-sm leading-relaxed">Switch between Claude, GPT, Gemini, and Ollama without losing a single byte of context.</p>
+      </div>
+    </div>
+    <!-- MCP Native -->
+    <div class="group relative aspect-[4/5] overflow-hidden rounded-sm bg-surface-low border border-border-ghost reveal reveal-delay-2">
+      <img src="images/pillar-mcp.png" alt="Server blade hardware" class="absolute inset-0 w-full h-full object-cover opacity-15 img-zoom" loading="lazy"/>
+      <div class="absolute inset-0 p-8 md:p-10 flex flex-col justify-end pillar-gradient">
+        <span class="font-mono text-teal text-[10px] tracking-[0.2em] mb-3 block">03 — PROTOCOL</span>
+        <h3 class="font-display text-2xl md:text-3xl font-bold mb-3 text-white">MCP Native</h3>
+        <p class="text-muted text-sm leading-relaxed">20+ built-in tools via Model Context Protocol. Works with Claude, ChatGPT, and any MCP client.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ DATA SOURCES ═══════════════════════════════════════ -->
+<section class="py-16 md:py-20 px-6 md:px-8 bg-surface-low border-y border-border-ghost">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="font-display text-3xl md:text-4xl font-bold mb-10 text-center text-white tracking-tight reveal">
+      The Senses — <span class="text-teal">Multi-Source Ingestion</span>
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="bg-surface border-t-2 border-teal p-6 rounded-sm reveal">
+        <span class="material-symbols-outlined text-teal mb-4 block text-2xl">folder_open</span>
+        <h4 class="font-display font-bold text-white mb-2">Files</h4>
+        <p class="text-muted text-xs leading-relaxed">Recursive scans of PDF, Excel, CSV, Word, and PowerPoint.</p>
+      </div>
+      <div class="bg-surface border-t-2 border-teal p-6 rounded-sm reveal reveal-delay-1">
+        <span class="material-symbols-outlined text-teal mb-4 block text-2xl">alternate_email</span>
+        <h4 class="font-display font-bold text-white mb-2">Communications</h4>
+        <p class="text-muted text-xs leading-relaxed">Gmail (OAuth2), IMAP sync, and Telegram real-time capture.</p>
+      </div>
+      <div class="bg-surface border-t-2 border-teal p-6 rounded-sm reveal reveal-delay-2">
+        <span class="material-symbols-outlined text-teal mb-4 block text-2xl">cloud_sync</span>
+        <h4 class="font-display font-bold text-white mb-2">Cloud Storage</h4>
+        <p class="text-muted text-xs leading-relaxed">OneDrive, Google Drive, Dropbox via rclone.</p>
+      </div>
+      <div class="bg-surface border-t-2 border-teal p-6 rounded-sm reveal reveal-delay-3">
+        <span class="material-symbols-outlined text-teal mb-4 block text-2xl">history_edu</span>
+        <h4 class="font-display font-bold text-white mb-2">AI History</h4>
+        <p class="text-muted text-xs leading-relaxed">Parsers for ChatGPT, Claude, and Gemini Takeout exports.</p>
+      </div>
+      <div class="bg-surface border-t-2 border-teal p-6 rounded-sm reveal reveal-delay-4">
+        <span class="material-symbols-outlined text-teal mb-4 block text-2xl">upload_file</span>
+        <h4 class="font-display font-bold text-white mb-2">Browser</h4>
+        <p class="text-muted text-xs leading-relaxed">Drag-and-drop dashboard uploads with progress tracking.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ ARCHITECTURE ═══════════════════════════════════════ -->
+<section id="architecture" class="py-16 md:py-20 relative overflow-hidden">
+  <div class="absolute inset-0 blueprint-grid"></div>
+  <div class="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
+    <div class="text-center mb-10 reveal">
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">System Architecture</h2>
+      <div class="w-16 h-0.5 bg-teal mx-auto"></div>
+    </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 reveal">
+      <!-- Sources -->
+      <div class="flex flex-col gap-3 w-full md:w-56 shrink-0">
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">description</span> Local Files
+        </div>
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">mail</span> Email Streams
+        </div>
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">cloud</span> Cloud Storage
+        </div>
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">history</span> AI History
+        </div>
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">upload</span> Browser Upload
+        </div>
+      </div>
+      <!-- Connector -->
+      <div class="hidden md:block flex-1 h-px glow-line"></div>
+      <!-- Engine -->
+      <div class="relative p-10 md:p-12 bg-surface border-2 border-teal rounded-sm w-full md:w-72 shrink-0 glow-teal">
+        <span class="absolute -top-2.5 left-5 bg-teal text-white text-[9px] px-2 py-0.5 font-bold font-mono tracking-wider rounded-sm">CORE ENGINE</span>
+        <h4 class="font-display font-bold text-3xl text-center mb-1"><span class="brand-text">T</span><span class="brand-bracket">[</span><span class="brand-ai">AI</span><span class="brand-bracket">]</span><span class="brand-text">LOR</span></h4>
+        <p class="font-mono text-[9px] uppercase text-center text-teal tracking-[0.2em]">Enrichment · Search · Memory</p>
+      </div>
+      <!-- Connector -->
+      <div class="hidden md:block flex-1 h-px glow-line"></div>
+      <!-- Outputs -->
+      <div class="flex flex-col gap-3 w-full md:w-56 shrink-0">
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">terminal</span> MCP Tools
+        </div>
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">send</span> Telegram Bot
+        </div>
+        <div class="bg-surface-low p-4 border border-border-ghost rounded-sm font-mono text-[10px] uppercase tracking-widest text-muted flex items-center gap-3">
+          <span class="material-symbols-outlined text-teal text-lg">dashboard</span> Web Dashboard
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ FEATURES ═══════════════════════════════════════ -->
+<section id="features" class="py-16 md:py-20 px-6 md:px-8 bg-surface-low border-y border-border-ghost">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-10 reveal">
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Feature Stack</h2>
+      <p class="text-muted font-mono text-xs uppercase tracking-[0.2em]">Enterprise-grade primitives for local AI</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-px bg-border-ghost border border-border-ghost">
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">01</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Hybrid Search</h4>
+        <p class="text-muted text-sm leading-relaxed mb-4">Semantic + keyword + entity search with ONNX cross-encoder reranking on consumer hardware.</p>
+        <span class="bg-teal/10 text-teal px-2.5 py-1 text-[10px] font-bold font-mono rounded-sm">~28ms / query</span>
+      </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal reveal-delay-1">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">02</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Atomic Facts</h4>
+        <p class="text-muted text-sm leading-relaxed">LLMs extract discrete facts from every document. Second-order derivation infers connections you never made explicit.</p>
+      </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal reveal-delay-2">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">03</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Temporal Grounding</h4>
+        <p class="text-muted text-sm leading-relaxed">Dual-layer dating — document_date vs event_date — for time-aware retrieval. Memory isn't just what, it's when.</p>
+      </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">04</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Nightly Enrichment</h4>
+        <p class="text-muted text-sm leading-relaxed">Automated pipeline: entity extraction, fact derivation, supersession filtering — all while you sleep.</p>
+      </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal reveal-delay-1">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">05</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">20+ MCP Tools</h4>
+        <p class="text-muted text-sm leading-relaxed">Built-in autonomous tools for search, memory management, reminders, Telegram, file operations, and system commands.</p>
+      </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal reveal-delay-2">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">06</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Fact Supersession</h4>
+        <p class="text-muted text-sm leading-relaxed">When facts change, TAILOR detects contradictions and auto-supersedes outdated info. No manual cleanup.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ INTERFACES ═══════════════════════════════════════ -->
+<section class="py-16 md:py-20 px-6 md:px-8 overflow-hidden">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+    <div class="reveal">
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-8 leading-tight">Manage<br/>everywhere.</h2>
+      <p class="text-muted text-lg mb-10 leading-relaxed">Whether you prefer a graphical dashboard or a conversational bot, TAILOR provides unified control over your local intelligence.</p>
+      <div class="space-y-5">
+        <div class="flex items-start gap-4">
+          <div class="bg-teal/10 p-2 rounded-sm shrink-0">
+            <span class="material-symbols-outlined text-teal">dashboard</span>
+          </div>
+          <div>
+            <h5 class="font-display font-bold text-white mb-1">Web Dashboard</h5>
+            <p class="text-sm text-muted">Real-time KB stats, live config editor, 9-step setup wizard, conversation uploads.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="bg-teal/10 p-2 rounded-sm shrink-0">
+            <span class="material-symbols-outlined text-teal">send</span>
+          </div>
+          <div>
+            <h5 class="font-display font-bold text-white mb-1">Telegram Bot</h5>
+            <p class="text-sm text-muted">Query your KB from your phone. Auto session capture after 10 min of inactivity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="relative reveal reveal-delay-2">
+      <!-- Dashboard mockup -->
+      <div class="bg-surface-highest rounded-sm p-1.5 shadow-2xl border border-border-ghost rotate-2 translate-x-4 md:translate-x-8">
+        <div class="bg-surface rounded-sm overflow-hidden border border-border-ghost aspect-video">
+          <img src="images/dashboard.png" alt="TAILOR web dashboard" class="w-full h-full object-cover" loading="lazy"/>
+        </div>
+      </div>
+      <!-- Telegram mockup -->
+      <div class="absolute top-1/4 -left-4 md:-left-8 w-56 md:w-64 bg-surface-mid rounded-lg p-4 shadow-2xl border border-border-ghost -rotate-3">
+        <div class="flex items-center gap-3 border-b border-border-ghost pb-3 mb-3">
+          <div class="w-7 h-7 rounded-full bg-teal/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-teal text-sm">smart_toy</span>
+          </div>
+          <span class="font-mono text-[10px] font-bold text-white tracking-wide">TAILOR BOT</span>
+        </div>
+        <div class="space-y-2.5">
+          <div class="bg-surface p-2 rounded-lg text-[10px] text-muted italic leading-relaxed">
+            When did I last discuss the architecture refactor?
+          </div>
+          <div class="bg-teal/90 p-2 rounded-lg text-[10px] text-white font-medium ml-3 leading-relaxed">
+            Tuesday at 2:15 PM during the sync. You decided to move to ONNX reranker...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ COMPARISON ═══════════════════════════════════════ -->
+<section id="comparison" class="py-16 md:py-20 px-6 md:px-8 bg-surface-low border-y border-border-ghost">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="font-display text-3xl md:text-4xl font-bold mb-10 text-center text-white tracking-tight reveal">Memory Benchmarks</h2>
+    <div class="overflow-hidden border border-border-ghost rounded-sm reveal">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-surface-mid">
+            <th class="p-5 md:p-6 font-mono text-[10px] uppercase tracking-widest text-muted">Feature</th>
+            <th class="p-5 md:p-6 font-mono text-[10px] uppercase tracking-widest font-bold"><span class="brand-text">T</span><span class="brand-bracket">[</span><span class="brand-ai">AI</span><span class="brand-bracket">]</span><span class="brand-text">LOR</span></th>
+            <th class="p-5 md:p-6 font-mono text-[10px] uppercase tracking-widest text-muted">Supermemory</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm">
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">Hosting</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">100% Local / Self-Hosted</td>
+            <td class="p-5 md:p-6 text-muted">Cloud Managed</td>
+          </tr>
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">Privacy</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">Data on your machine</td>
+            <td class="p-5 md:p-6 text-muted">SaaS Terms</td>
+          </tr>
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">LLM Support</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">Any provider (4 built-in)</td>
+            <td class="p-5 md:p-6 text-muted">Locked to their stack</td>
+          </tr>
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">Tool Use</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">20+ autonomous MCP tools</td>
+            <td class="p-5 md:p-6 text-muted">API Webhooks</td>
+          </tr>
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">Cost</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">Free (Apache 2.0)</td>
+            <td class="p-5 md:p-6 text-muted">Monthly Credits</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ QUICK START ═══════════════════════════════════════ -->
+<section id="quickstart" class="py-16 md:py-20 px-6 md:px-8">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-10 reveal">
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-3">Get Running in 60s</h2>
+      <p class="text-muted font-mono text-xs tracking-[0.2em] uppercase">From zero to persistent intelligence</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10 md:gap-12 relative">
+      <!-- Progress line -->
+      <div class="hidden md:block absolute top-10 left-[16%] right-[16%] h-px bg-gradient-to-r from-border-ghost via-teal/30 to-border-ghost z-0"></div>
+
+      <div class="relative z-10 text-center reveal">
+        <div class="w-20 h-20 bg-surface border-2 border-teal rounded-full flex items-center justify-center mx-auto mb-8 glow-teal">
+          <span class="font-display text-2xl font-bold text-white">1</span>
+        </div>
+        <h4 class="font-display text-xl font-bold text-white mb-4">Install</h4>
+        <div class="code-block p-4 rounded-sm text-[11px] text-teal text-left whitespace-pre leading-relaxed">git clone https://github.com/tailormemory/tailor
+cd tailor && ./setup.sh</div>
+      </div>
+
+      <div class="relative z-10 text-center reveal reveal-delay-1">
+        <div class="w-20 h-20 bg-surface border-2 border-teal rounded-full flex items-center justify-center mx-auto mb-8 glow-teal">
+          <span class="font-display text-2xl font-bold text-white">2</span>
+        </div>
+        <h4 class="font-display text-xl font-bold text-white mb-4">Configure</h4>
+        <p class="text-sm text-muted px-2 leading-relaxed">Open <span class="font-mono text-teal text-xs">localhost:8787</span> — the 9-step Setup Wizard configures providers, sync, and Telegram.</p>
+      </div>
+
+      <div class="relative z-10 text-center reveal reveal-delay-2">
+        <div class="w-20 h-20 bg-surface border-2 border-teal rounded-full flex items-center justify-center mx-auto mb-8 glow-teal">
+          <span class="font-display text-2xl font-bold text-white">3</span>
+        </div>
+        <h4 class="font-display text-xl font-bold text-white mb-4">Connect</h4>
+        <p class="text-sm text-muted px-2 leading-relaxed">Add TAILOR as an MCP connector in Claude, ChatGPT, or any MCP-compatible client.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ FOOTER CTA ═══════════════════════════════════════ -->
+<footer class="bg-surface-low py-14 md:py-16 px-6 md:px-8 border-t border-border-ghost">
+  <div class="max-w-7xl mx-auto flex flex-col items-center text-center space-y-8">
+    <h3 class="font-display text-2xl md:text-3xl font-bold text-teal tracking-wide">
+      Total Recall. Total Control.
+    </h3>
+    <p class="text-muted text-sm max-w-md leading-relaxed">Your conversations, documents, emails, and decisions — woven into a living, local brain for your AI.</p>
+    <div class="flex flex-wrap justify-center gap-6 pt-2">
+      <a href="#" class="text-muted hover:text-teal transition-colors font-mono text-[10px] uppercase tracking-[0.15em]">Documentation</a>
+      <a href="https://github.com/tailormemory/tailor" target="_blank" rel="noopener" class="text-muted hover:text-teal transition-colors font-mono text-[10px] uppercase tracking-[0.15em]">GitHub</a>
+      <a href="#" class="text-muted hover:text-teal transition-colors font-mono text-[10px] uppercase tracking-[0.15em]">Twitter</a>
+      <a href="#" class="text-muted hover:text-teal transition-colors font-mono text-[10px] uppercase tracking-[0.15em]">Telegram</a>
+    </div>
+    <div class="pt-4">
+      <span class="bg-surface-mid px-4 py-2 border border-border-ghost rounded-sm font-mono text-[10px] font-bold text-muted">Apache 2.0</span>
+    </div>
+    <div class="text-[10px] text-muted/50 font-mono tracking-[0.2em] uppercase pt-4">
+      &copy; 2025 TAILOR. Open Source under Apache 2.0.
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════════ -->
+<script>
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// Navbar scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
+}, { passive: true });
+</script>
+
+</body>
+</html>
