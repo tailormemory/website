@@ -337,7 +337,7 @@ tailwind.config = {
       <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Feature Stack</h2>
       <p class="text-muted font-mono text-xs uppercase tracking-[0.2em]">Enterprise-grade primitives for local AI</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-px bg-border-ghost border border-border-ghost">
+    <div class="grid md:grid-cols-4 gap-px bg-border-ghost border border-border-ghost">
       <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal">
         <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">01</div>
         <h4 class="font-display text-lg font-bold text-white mb-3">Hybrid Search</h4>
@@ -369,6 +369,16 @@ tailwind.config = {
         <h4 class="font-display text-lg font-bold text-white mb-3">Fact Supersession</h4>
         <p class="text-muted text-sm leading-relaxed">When facts change, TAILOR detects contradictions and auto-supersedes outdated info. No manual cleanup.</p>
       </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">07</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Model Advisor</h4>
+        <p class="text-muted text-sm leading-relaxed">Scans HuggingFace and cloud APIs for models that fit your hardware. One-click install from the dashboard.</p>
+      </div>
+      <div class="bg-surface p-10 md:p-12 group hover:bg-surface-mid transition-colors duration-500 reveal reveal-delay-1">
+        <div class="text-teal font-mono text-3xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">08</div>
+        <h4 class="font-display text-lg font-bold text-white mb-3">Multi-Backend Enrichment</h4>
+        <p class="text-muted text-sm leading-relaxed">Ordered list of LLM backends with automatic rotation on rate limits. Config-driven, zero downtime.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -386,7 +396,7 @@ tailwind.config = {
           </div>
           <div>
             <h5 class="font-display font-bold text-white mb-1">Web Dashboard</h5>
-            <p class="text-sm text-muted">Real-time KB stats, live config editor, 9-step setup wizard, conversation uploads.</p>
+            <p class="text-sm text-muted">Real-time KB stats, live config editor, 10-step setup wizard, conversation uploads.</p>
           </div>
         </div>
         <div class="flex items-start gap-4">
@@ -467,6 +477,16 @@ tailwind.config = {
             <td class="p-5 md:p-6 text-teal bg-teal/5">Free (Apache 2.0)</td>
             <td class="p-5 md:p-6 text-muted">Monthly Credits</td>
           </tr>
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">Model Discovery</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">Hardware-aware recommendations</td>
+            <td class="p-5 md:p-6 text-muted">—</td>
+          </tr>
+          <tr class="border-t border-border-ghost table-row transition-colors">
+            <td class="p-5 md:p-6 font-medium text-white">Enrichment Backends</td>
+            <td class="p-5 md:p-6 text-teal bg-teal/5">Multi-backend with auto-rotation</td>
+            <td class="p-5 md:p-6 text-muted">Single provider</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -498,7 +518,7 @@ cd tailor && ./setup.sh</div>
           <span class="font-display text-2xl font-bold text-white">2</span>
         </div>
         <h4 class="font-display text-xl font-bold text-white mb-4">Configure</h4>
-        <p class="text-sm text-muted px-2 leading-relaxed">Open <span class="font-mono text-teal text-xs">localhost:8787</span> — the 9-step Setup Wizard configures providers, sync, and Telegram.</p>
+        <p class="text-sm text-muted px-2 leading-relaxed">Open <span class="font-mono text-teal text-xs">localhost:8787</span> — the 10-step Setup Wizard configures providers, sync, and Telegram.</p>
       </div>
 
       <div class="relative z-10 text-center reveal reveal-delay-2">
@@ -529,7 +549,7 @@ cd tailor && ./setup.sh</div>
       <span class="bg-surface-mid px-4 py-2 border border-border-ghost rounded-sm font-mono text-[10px] font-bold text-muted">Apache 2.0</span>
     </div>
     <div class="text-[10px] text-muted/50 font-mono tracking-[0.2em] uppercase pt-4">
-      &copy; 2025 TAILOR. Open Source under Apache 2.0.
+      &copy; 2026 TAILOR. Open Source under Apache 2.0.
     </div>
   </div>
 </footer>
