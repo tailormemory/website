@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy &mdash; TAILOR</title>
+<meta name="description" content="TAILOR privacy policy. We dont collect your data. It never leaves your machine."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://tailormemory.ai/privacy"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<style>
+  body { font-family: "Space Grotesk", sans-serif; background: #0a0a0a; color: #d1d5db; }
+  h1 { font-family: "Space Grotesk", sans-serif; color: #fff; font-weight: 700; letter-spacing: -0.02em; }
+  h2 { font-family: "Space Grotesk", sans-serif; color: #fff; font-weight: 700; font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  h3 { font-family: "Space Grotesk", sans-serif; color: #fff; font-weight: 500; font-size: 1.125rem; margin-top: 2rem; margin-bottom: 0.75rem; }
+  p { line-height: 1.75; margin-bottom: 1rem; color: #9ca3af; }
+  ul { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+  ul li { padding-left: 1.5rem; position: relative; line-height: 1.75; color: #9ca3af; margin-bottom: 0.5rem; }
+  ul li::before { content: "▸"; color: #0d9488; position: absolute; left: 0; }
+  strong { color: #fff; font-weight: 500; }
+  code { font-family: "JetBrains Mono", monospace; background: #181818; border: 1px solid #ffffff0d; padding: 0.1rem 0.4rem; border-radius: 2px; font-size: 0.875em; color: #5eead4; }
+  a { color: #5eead4; text-decoration: underline; text-decoration-color: #0d948840; text-underline-offset: 3px; }
+  a:hover { text-decoration-color: #5eead4; }
+  .callout { background: #111111; border-left: 2px solid #0d9488; padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 2px; }
+  .callout p { margin-bottom: 0; color: #d1d5db; }
+  .navbar { background: rgba(10,10,10,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid #ffffff0d; }
+  .logo-teal { color: #0d9488; font-weight: 300; }
+  .nav-link { color: #9ca3af; font-family: "JetBrains Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; transition: color 0.2s; }
+  .nav-link:hover { color: #0d9488; }
+  .eyebrow { font-family: "JetBrains Mono", monospace; font-size: 0.75rem; color: #0d9488; text-transform: uppercase; letter-spacing: 0.2em; }
+  footer { background: #111111; border-top: 1px solid #ffffff0d; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<nav class="fixed top-0 left-0 right-0 z-50 navbar">
+  <div class="max-w-7xl mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
+    <a href="/" class="font-bold text-xl tracking-tight text-white">
+      T<span class="logo-teal">[AI]</span>LOR
+    </a>
+    <div class="flex gap-6 items-center">
+      <a href="/" class="nav-link">Home</a>
+      <a href="https://github.com/tailormemory/tailor" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-3xl mx-auto px-6 md:px-8 pt-32 pb-24">
+
+  <div class="mb-12">
+    <p class="eyebrow mb-4">Privacy Policy</p>
+    <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Your data stays yours.</h1>
+    <p class="text-sm" style="color:#9ca3af">Last updated: April 16, 2026</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>TL;DR</strong> &mdash; TAILOR is self-hosted. Your data lives on your machine. We do not run any server, log, or database that receives your content. The Chrome extension sends conversations only to the TAILOR instance you configure &mdash; typically your own Mac or Linux box.</p>
+  </div>
+
+  <h2>1. What TAILOR Is</h2>
+  <p>TAILOR is an open-source memory framework for AI assistants. It runs on your own hardware. There is no cloud service operated by TAILOR or its authors. When you install TAILOR, you become the operator of your own instance.</p>
+
+  <h2>2. The TAILOR Chrome Extension</h2>
+  <p>The official Chrome extension captures conversations from supported AI chat sites (Claude, ChatGPT, Gemini) and sends them to <strong>your own TAILOR server</strong>, whose URL you enter during setup.</p>
+
+  <h3>What the extension accesses</h3>
+  <ul>
+    <li><strong>Page content</strong> on <code>claude.ai</code>, <code>chatgpt.com</code>, and <code>gemini.google.com</code> &mdash; only to read the visible conversation text.</li>
+    <li><strong>Local browser storage</strong> &mdash; to remember your TAILOR server URL and API token between sessions.</li>
+  </ul>
+
+  <h3>Where the data goes</h3>
+  <ul>
+    <li><strong>Only to the TAILOR server URL you configured.</strong> Nowhere else.</li>
+    <li>No analytics, no telemetry, no third-party services.</li>
+    <li>The extension does not send any data to Anthropic, OpenAI, Google, or the extensions authors.</li>
+    <li>If you configure a local URL (e.g. <code>http://localhost:8787</code>), the data never leaves your machine.</li>
+  </ul>
+
+  <h3>What the extension does not do</h3>
+  <ul>
+    <li>Does not track your browsing outside the supported AI sites.</li>
+    <li>Does not inject any content into the page.</li>
+    <li>Does not sell, share, or aggregate your data &mdash; because it does not collect any data centrally.</li>
+  </ul>
+
+  <h2>3. The TAILOR Software (self-hosted)</h2>
+  <p>When you run the TAILOR server on your own machine, all data &mdash; your knowledge base, conversations, facts, embeddings &mdash; is stored locally in ChromaDB and SQLite files under the TAILOR installation directory. Nothing is transmitted to us or any third party by TAILOR itself.</p>
+  <p>If you configure external LLM providers (Anthropic, OpenAI, Google), their respective privacy policies apply to the content you send to them through TAILOR. You control which provider is used and when.</p>
+
+  <h2>4. Data We Collect</h2>
+  <p>None. TAILOR does not operate any backend service that receives, stores, or processes your data. The authors of TAILOR have no access to your knowledge base, your conversations, or any information processed by your instance.</p>
+
+  <h2>5. Third-Party Services Used By TAILOR</h2>
+  <p>TAILOR optionally integrates with external services that you enable and configure. When enabled, data is sent directly from your TAILOR instance to those services &mdash; not to us.</p>
+  <ul>
+    <li><strong>LLM providers</strong> &mdash; Anthropic, OpenAI, Google (optional; you provide your own API keys).</li>
+    <li><strong>Ollama</strong> &mdash; runs locally on your machine. No data leaves your hardware.</li>
+    <li><strong>Cloud sync</strong> &mdash; rclone to OneDrive, Google Drive, Dropbox (optional; credentials managed by you).</li>
+    <li><strong>Email sync</strong> &mdash; IMAP or Gmail API (optional; credentials managed by you).</li>
+    <li><strong>Telegram</strong> &mdash; optional bot integration (token managed by you).</li>
+  </ul>
+  <p>For each of these, the respective providers privacy policy applies. The authors of TAILOR do not see or intercept this traffic.</p>
+
+  <h2>6. The tailormemory.ai Website</h2>
+  <p>This website is a static landing page hosted on Cloudflare Pages. It does not use cookies, analytics, or tracking pixels. Cloudflare collects standard server logs (IP, user agent) for security and abuse prevention, as described in the <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare Privacy Policy</a>.</p>
+
+  <h2>7. Your Rights</h2>
+  <p>Because TAILOR does not collect or hold your data centrally, there is no data for us to provide, correct, or delete on your behalf. You have complete control over your own instance &mdash; export, delete, or backup your knowledge base at any time directly on your hardware.</p>
+
+  <h2>8. Childrens Privacy</h2>
+  <p>TAILOR is intended for technical users and is not directed at children under 13. We do not knowingly collect any data from anyone, including children.</p>
+
+  <h2>9. Changes to This Policy</h2>
+  <p>If this policy changes materially, we will update the "Last updated" date above and note the change in the project repository. Because we do not have user accounts or contact information, we cannot notify users directly &mdash; please check this page periodically if the policy matters to you.</p>
+
+  <h2>10. Contact</h2>
+  <p>For questions about this policy or the TAILOR project, open an issue on the <a href="https://github.com/tailormemory/tailor/issues" target="_blank" rel="noopener">GitHub repository</a>.</p>
+
+</main>
+
+<footer class="py-10 px-6 md:px-8">
+  <div class="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <span class="font-bold text-sm text-white">T<span class="logo-teal">[AI]</span>LOR</span>
+    <span class="text-[10px] font-mono tracking-[0.2em] uppercase" style="color:rgba(156,163,175,0.5)">&copy; 2026 TAILOR &middot; Apache 2.0</span>
+  </div>
+</footer>
+
+</body>
+</html>
